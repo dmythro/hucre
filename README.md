@@ -366,7 +366,9 @@ for await (const row of streamXlsxRows(buffer, { range: "B2:D1000" })) {
 
 // Legacy .xls streams the same way, with the same `sheet`, `range` and
 // `maxRows`. The file is read whole — a CFB container needs random
-// access — but the sheet's rows are never all held at once.
+// access — and a sheet whose cells come in row order is never held
+// whole; one whose records go back a row is buffered, under
+// `maxTotalCells`, and yielded in order.
 for await (const row of streamXlsRows(xlsBytes, { sheet: "Data" })) {
   console.log(row.index, row.values)
 }
